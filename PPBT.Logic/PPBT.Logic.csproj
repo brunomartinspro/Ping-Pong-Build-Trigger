@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PPBT.DataTransferObject\PPBT.DataTransferObject.csproj" />
+    <ProjectReference Include="..\PPBT.Infrastructure\PPBT.Infrastructure.csproj" />
+    <ProjectReference Include="..\PPBT.Logic.Interface\PPBT.Logic.Interface.csproj" />
+  </ItemGroup>
+
+</Project>

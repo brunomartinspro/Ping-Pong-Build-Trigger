@@ -1,0 +1,30 @@
+[
+  {
+    "Name": "Exceptions CI",
+    "Order": 1
+  },
+  {
+    "Name": "Enumerations CI",
+    "Order": 2
+  },
+  {
+    "Name": "CommonAPI CI",
+    "Order": 3
+  },
+  {
+    "Name": "Identity CI",
+    "Order": 4
+  },
+  {
+    "Name": "ApplicationContext CI",
+    "Order": 5
+  },
+  {
+    "Name": "Helpers CI",
+    "Order": 6
+  },
+  {
+    "Name": "Logger CI",
+    "Order": 7
+  }
+]
