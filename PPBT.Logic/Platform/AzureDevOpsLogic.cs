@@ -172,7 +172,7 @@ namespace PPBT.Logic.Platform
             bool keepLooping = true;
             List<BuildDto> buildCompletedList = new List<BuildDto>();
 
-            buildList = OrderBuildListByBuildOrder(buildOrderList, buildList).ToList();
+            buildList = OrderBuildListByBuildOrder(buildOrderList, buildList).Where(x => !x.name.ToLower().Contains("devops")).ToList();
 
             if(buildList.Any(x => x.BuildSuccessOrder > 0))
             {
