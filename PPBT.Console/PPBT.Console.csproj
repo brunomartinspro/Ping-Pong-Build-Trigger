@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>PPBT.Console</RootNamespace>
-    <AssemblyName>PPBT.Console</AssemblyName>
+    <AssemblyName>PingPongBuildTrigger</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PPBT.DataTransferObject\PPBT.DataTransferObject.csproj" />
+    <ProjectReference Include="..\PPBT.Infrastructure\PPBT.Infrastructure.csproj" />
+    <ProjectReference Include="..\PPBT.Logic\PPBT.Logic.csproj" />
   </ItemGroup>
 
 </Project>

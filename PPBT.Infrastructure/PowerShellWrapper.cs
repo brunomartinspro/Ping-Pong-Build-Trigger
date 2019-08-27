@@ -9,6 +9,15 @@ namespace PPBT.Infrastructure.Git
 {
     public class PowerShellWrapper
     {
+        public async Task<bool> ConsoleWriteLine(string text)
+        {
+            var script = $"Write-Host ({text})";
+
+            await InvokeScript(script);
+
+            return true;
+        }
+
         public async Task<PSDataCollection<PSObject>> InvokeScript(string script)
         {
             using (PowerShell ps = PowerShell.Create())
@@ -21,7 +30,7 @@ namespace PPBT.Infrastructure.Git
                 ps.Streams.Error.DataAdded += Error_DataAdded;
 
                 var result = await Task.Run(() => ps.BeginInvoke<PSObject, PSObject>(null, outputCollection));
-
+                
                 while(!result.IsCompleted)
                 {
                     Console.WriteLine("PowerShell: Executing Script..");

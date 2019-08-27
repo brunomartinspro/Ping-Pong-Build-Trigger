@@ -18,7 +18,10 @@ namespace PPBT.Infrastructure.IO
         {
             _optionsDto = optionsDto;
 
-            _optionsDto.LastKnownFile = _optionsDto.LastKnownFile.Contains("BuildOrder.json") ? _optionsDto.LastKnownFile : _optionsDto.LastKnownFile + "/BuildOrder.json";
+            if (!string.IsNullOrEmpty(_optionsDto?.LastKnownFile))
+            {
+                _optionsDto.LastKnownFile = _optionsDto.LastKnownFile.Contains("BuildOrder.json") ? _optionsDto.LastKnownFile : _optionsDto.LastKnownFile + "/BuildOrder.json";
+            }
 
         }
 
@@ -37,14 +40,25 @@ namespace PPBT.Infrastructure.IO
 
                 string json = JsonConvert.SerializeObject(fileSuccessOrderDtoList, Formatting.Indented);
 
-                File.WriteAllText(_optionsDto.LastKnownFile, json);
+                if(!string.IsNullOrEmpty(_optionsDto.LastKnownFile))
+                {
+                    File.WriteAllText(_optionsDto.LastKnownFile, json);
+                    Console.WriteLine($"----- Sequenced was updated to the file -----");
+
+                }
+                else
+                {
+                    Console.WriteLine($"----- Sequenced does not have a file -----");
+
+                    Console.WriteLine($"#### {json} ####");
+                }
 
                 success = true;
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: { ex.ToString() }");
-
+                Console.WriteLine($"----- Sequenced was NOT updated to the file error: { ex.ToString() } -----");
             }
 
             return success;
@@ -60,11 +74,14 @@ namespace PPBT.Infrastructure.IO
 
             try
             {
-                var fileContent = File.ReadAllLines(_optionsDto.LastKnownFile)?.Aggregate((i, j) => i + j);
+                if (!string.IsNullOrEmpty(_optionsDto?.LastKnownFile))
+                {
+                    var fileContent = File.ReadAllLines(_optionsDto.LastKnownFile)?.Aggregate((i, j) => i + j);
 
-                buildOrderList = JsonConvert.DeserializeObject<List<BuildOrderDto>>(fileContent);
+                    buildOrderList = JsonConvert.DeserializeObject<List<BuildOrderDto>>(fileContent);
 
-                buildOrderList = buildOrderList.OrderBy(x => x.Order).ToList();
+                    buildOrderList = buildOrderList.OrderBy(x => x.Order).ToList();
+                }
             }
             catch (Exception ex)
             {

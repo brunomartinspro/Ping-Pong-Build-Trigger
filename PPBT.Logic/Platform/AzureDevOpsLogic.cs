@@ -51,13 +51,20 @@ namespace PPBT.Logic.Platform
 
             try
             {
+                Console.WriteLine("PingPong Starting");
+
                 var buildOrderList = _fileBuildOrderLogic.OpenFile();
 
                 var buildList = await GetBuilds();
 
+                Console.WriteLine($"Builds found: {buildList.Select(x => x.name).Aggregate((x, i) => x + Environment.NewLine +i)}");
+
                 var updatedBuildList = await TriggerBuilds(buildOrderList, buildList);
 
                 buildOrderList = updatedBuildList.Select(x => new BuildOrderDto { Name = x.name, Order = x.BuildSuccessOrder }).ToList();
+
+                Console.WriteLine($"Build order: {buildOrderList.Select(x => x.Name).Aggregate((x, i) => x + Environment.NewLine + i)}");
+
 
                 _fileBuildOrderLogic.CreateOrModifyFile(buildOrderList);
 
@@ -67,6 +74,8 @@ namespace PPBT.Logic.Platform
             {
                 Console.WriteLine($"Error: { ex.ToString() }");
             }
+
+            Console.WriteLine("PingPong Ended");
 
             return result;
         }
@@ -165,20 +174,31 @@ namespace PPBT.Logic.Platform
 
             buildList = OrderBuildListByBuildOrder(buildOrderList, buildList).ToList();
 
-            foreach (var build in buildList.Where(x => x.BuildSuccessOrder > 0).ToList())
+            if(buildList.Any(x => x.BuildSuccessOrder > 0))
             {
-                await TriggerBuild(build);
+                Console.WriteLine($"----- Triggering Build in sequence -----");
 
-                if (build.BuildSuccessOrder > 0)
+                foreach (var build in buildList.Where(x => x.BuildSuccessOrder > 0).ToList())
                 {
-                    buildCompletedList.Add(build);
+                    await TriggerBuild(build);
+                
+                    if (build.BuildSuccessOrder > 0)
+                    {
+                        buildCompletedList.Add(build);
+                    }
                 }
             }
 
             var brokenBuildList = buildList.Where(x => x.BuildSuccessOrder < 1).ToList();
 
+            int loop = 1;
+
             while (brokenBuildList.Any() && keepLooping)
             {
+                Console.WriteLine($"{Environment.NewLine}");
+
+                Console.WriteLine($"----- Triggering Build in parallel Loop {loop}-----");
+
                 counter = 0;
 
                 Parallel.ForEach(brokenBuildList, async (build) =>
@@ -194,15 +214,21 @@ namespace PPBT.Logic.Platform
 
                     if ((_optionsDto.InfiniteCycles.HasValue && !_optionsDto.InfiniteCycles.Value) || !_optionsDto.InfiniteCycles.HasValue)
                     {
+                        Console.WriteLine($"----- Error Tolerance: [Current {brokenBuildList.Max(x => x.BuildFailedCounter)}] [Max {_optionsDto.MaxErrorCycles ?? 10}] -----");
+
                         keepLooping = !brokenBuildList.Any(x => x.BuildFailedCounter >= (_optionsDto.MaxErrorCycles ?? 10));
 
                         if (!keepLooping)
                         {
+                            Console.WriteLine($"----- Maximum Build attempts reached, stopping the loop -----");
+
                             break;
                         }
                     }
                     Thread.Sleep(5000);
                 }
+
+                loop++;
             }
 
             buildCompletedList.AddRange(brokenBuildList);
@@ -217,22 +243,30 @@ namespace PPBT.Logic.Platform
         /// <returns></returns>
         private async Task TriggerBuild(BuildDto build)
         {
-            var createdBuild = await PostBuild(build);
+            Console.WriteLine($"Triggering Build: {build.name}");
 
+            var createdBuild = await PostBuild(build);
+            
             while (createdBuild.status != "completed")
             {
                 Thread.Sleep(5000);
+
+                Console.WriteLine($"Triggered Build: {build.name} - Not Completed.. Waiting...");
 
                 createdBuild = await GetBuild(createdBuild.id);
             }
 
             if (createdBuild.result == "succeeded")
             {
+                Console.WriteLine($"Triggered Build: {build.name} - succeeded");
+
                 buildOrder++;
                 build.BuildSuccessOrder = buildOrder;
             }
             else
             {
+                Console.WriteLine($"Triggered Build: {build.name} - failed");
+
                 counter++;
                 build.BuildFailedCounter++;
                 build.BuildSuccessOrder = 0;

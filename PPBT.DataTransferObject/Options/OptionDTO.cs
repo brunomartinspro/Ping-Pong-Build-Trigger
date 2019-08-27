@@ -11,7 +11,7 @@ namespace PPBT.DataTransferObject
         [Option('s', "source", Required = true, HelpText = "Project Uri")]
         public string SourceUri { get; set; }
 
-        [Option('k', "apiKey", Required = true, HelpText = "Api Key")]
+        [Option('k', "api-key", Required = true, HelpText = "Api Key")]
         public string ApiKey { get; set; }
 
         [Option('l', "last-known-file", Required = false, HelpText = "Last Known File")]
