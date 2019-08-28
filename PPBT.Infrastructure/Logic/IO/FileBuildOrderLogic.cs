@@ -76,6 +76,11 @@ namespace PPBT.Infrastructure.IO
             {
                 if (!string.IsNullOrEmpty(_optionsDto?.LastKnownFile))
                 {
+                    if(!File.Exists(_optionsDto.LastKnownFile))
+                    {
+                        File.Create(_optionsDto.LastKnownFile);
+                    }
+
                     var fileContent = File.ReadAllLines(_optionsDto.LastKnownFile)?.Aggregate((i, j) => i + j);
 
                     buildOrderList = JsonConvert.DeserializeObject<List<BuildOrderDto>>(fileContent);
