@@ -2,6 +2,9 @@
 
 Randomly trigger builds to find a sequenced build order
 
+## Current available extensions
+- [AzureDevOps](https://github.com/brunomartinspro/Ping-Pong-Build-Trigger-AzureDevOps)
+
 ## Use case
 
 Having separate repositories that have an order that needs to be built with an exact order, this program triggers builds first in parallel order:
