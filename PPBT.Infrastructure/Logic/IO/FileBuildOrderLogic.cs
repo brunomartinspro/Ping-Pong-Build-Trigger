@@ -78,7 +78,8 @@ namespace PPBT.Infrastructure.IO
                 {
                     if(!File.Exists(_optionsDto.LastKnownFile))
                     {
-                        File.Create(_optionsDto.LastKnownFile);
+                        File.Create(_optionsDto.LastKnownFile).Close();
+                        File.WriteAllText(_optionsDto.LastKnownFile, JsonConvert.SerializeObject(new List<BuildOrderDto>(), Formatting.Indented));
                     }
 
                     var fileContent = File.ReadAllLines(_optionsDto.LastKnownFile)?.Aggregate((i, j) => i + j);
