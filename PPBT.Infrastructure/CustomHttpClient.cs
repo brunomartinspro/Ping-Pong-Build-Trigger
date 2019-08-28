@@ -64,5 +64,23 @@ namespace PPBT.Infrastructure
             //Return Response
             return JsonConvert.DeserializeObject<T>(responseBody);
         }
+
+        /// <summary>
+        /// Patch Content
+        /// </summary>
+        public async Task<T> PatchAsync<T>(string uri, string json)
+        {
+            // Build Json
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // Post build
+            var response = await HttpClient.PatchAsync(uri, content);
+
+            //Get Json
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            //Return Response
+            return JsonConvert.DeserializeObject<T>(responseBody);
+        }
     }
 }

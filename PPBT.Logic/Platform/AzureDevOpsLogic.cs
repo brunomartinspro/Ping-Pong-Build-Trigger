@@ -111,6 +111,33 @@ namespace PPBT.Logic.Platform
             return response;
         }
 
+
+        /// <summary>
+        /// Delete Build
+        /// </summary>
+        /// <param name="buildId"></param>
+        /// <returns></returns>
+        public async Task<List<BuildDto>> DeleteAllBuilds()
+        {
+            //Setup resources
+            string uri = $"{ _optionsDto.SourceUri }/_apis/build/builds";
+
+            //Make Request
+            var response = await _httpClient.GetAsync<BuildRequestDto>(uri);
+
+            foreach(var build in response.BuildList.Where(x => x.status != "completed").ToList())
+            {
+                uri = $"{ _optionsDto.SourceUri }/_apis/build/builds/{build.id}?api-version=4.1";
+
+                //Make Request
+                await _httpClient.PatchAsync<BuildRequestDto>(uri, JsonConvert.SerializeObject(new { status = "Cancelling" }));
+            }
+
+            //Return Build List
+            return response?.BuildList;
+        }
+        
+
         /// <summary>
         /// Post Build
         /// </summary>

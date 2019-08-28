@@ -41,6 +41,13 @@ namespace PPBT.Logic.Test.Platform
         }
 
         [Fact]
+        public async Task DeleteAllBuilds()
+        {
+            await _azureDevOps.DeleteAllBuilds();
+        }
+
+
+        [Fact]
         public async Task TriggerBuilds()
         {
             var buildOrderList = _fileBuildOrderLogic.OpenFile();
