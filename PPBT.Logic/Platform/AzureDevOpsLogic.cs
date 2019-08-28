@@ -220,7 +220,7 @@ namespace PPBT.Logic.Platform
 
             int loop = 1;
 
-            while (brokenBuildList.Any() && keepLooping)
+            while (brokenBuildList.Where(x => x.BuildSuccessOrder < 1).Any() && keepLooping)
             {
                 Console.WriteLine($"{Environment.NewLine}");
 
