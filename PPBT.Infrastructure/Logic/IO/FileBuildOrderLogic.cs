@@ -44,7 +44,6 @@ namespace PPBT.Infrastructure.IO
                 {
                     File.WriteAllText(_optionsDto.LastKnownFile, json);
                     Console.WriteLine($"----- Sequenced was updated to the file -----");
-
                 }
                 else
                 {
@@ -52,6 +51,10 @@ namespace PPBT.Infrastructure.IO
 
                     Console.WriteLine($"#### {json} ####");
                 }
+
+                Console.WriteLine($"----- Output Sequence ----- {Environment.NewLine} {json}");
+                Console.WriteLine($"----- Output Sequence ----- {Environment.NewLine}");
+
 
                 success = true;
 
@@ -83,6 +86,8 @@ namespace PPBT.Infrastructure.IO
                     }
 
                     var fileContent = File.ReadAllLines(_optionsDto.LastKnownFile)?.Aggregate((i, j) => i + j);
+                    Console.WriteLine($"----- Input Sequence ----- {Environment.NewLine} {fileContent}");
+                    Console.WriteLine($"----- Input Sequence ----- {Environment.NewLine}");
 
                     buildOrderList = JsonConvert.DeserializeObject<List<BuildOrderDto>>(fileContent);
 
