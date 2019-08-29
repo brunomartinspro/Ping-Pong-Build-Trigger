@@ -57,6 +57,12 @@ namespace PPBT.Logic.Platform
 
                 var buildList = await GetBuilds();
 
+                if(buildList == null || !buildList.Any())
+                {
+                    Console.WriteLine($"No builds were found.");
+                    return result;
+                }
+
                 Console.WriteLine($"Builds found: {buildList.Select(x => x.name).Aggregate((x, i) => x + Environment.NewLine +i)}");
 
                 var updatedBuildList = await TriggerBuilds(buildOrderList, buildList);
