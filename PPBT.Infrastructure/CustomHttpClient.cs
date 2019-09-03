@@ -36,11 +36,14 @@ namespace PPBT.Infrastructure
             //Make Request
             var response = await HttpClient.GetAsync(uri);
 
-            //Validate Success
-            response.EnsureSuccessStatusCode();
-
             //Get Json
             string responseBody = await response.Content.ReadAsStringAsync();
+
+            //Validate Success
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception($"GET:{Environment.NewLine} {uri} {Environment.NewLine} Failed: {Environment.NewLine} {responseBody}");
+            }
 
             //Return Repository List
             return JsonConvert.DeserializeObject<T>(responseBody);
@@ -60,7 +63,13 @@ namespace PPBT.Infrastructure
 
             //Get Json
             string responseBody = await response.Content.ReadAsStringAsync();
-            
+
+            //Validate Success
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception($"POST: {Environment.NewLine} {uri} {Environment.NewLine} with Content: {Environment.NewLine} {json} {Environment.NewLine} Failed:{Environment.NewLine} {responseBody}");
+            }
+
             //Return Response
             return JsonConvert.DeserializeObject<T>(responseBody);
         }
@@ -78,6 +87,12 @@ namespace PPBT.Infrastructure
 
             //Get Json
             string responseBody = await response.Content.ReadAsStringAsync();
+
+            //Validate Success
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception($"PATCH: {Environment.NewLine} {uri} {Environment.NewLine} with Content: {Environment.NewLine} {json} {Environment.NewLine} Failed:{Environment.NewLine} {responseBody}");
+            }
 
             //Return Response
             return JsonConvert.DeserializeObject<T>(responseBody);

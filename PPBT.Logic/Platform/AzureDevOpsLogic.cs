@@ -136,7 +136,7 @@ namespace PPBT.Logic.Platform
                 uri = $"{ _optionsDto.SourceUri }/_apis/build/builds/{build.id}?api-version=4.1";
 
                 //Make Request
-                await _httpClient.PatchAsync<BuildRequestDto>(uri, JsonConvert.SerializeObject(new { status = "Cancelling" }));
+                await _httpClient.PatchAsync<BuildRequestDto>(uri, JsonConvert.SerializeObject(new { status = "Cancelling" }, Formatting.Indented));
             }
 
             //Return Build List
@@ -157,7 +157,7 @@ namespace PPBT.Logic.Platform
                 SourceBranch = _optionsDto.SourceBranch
             };
 
-            string json = JsonConvert.SerializeObject(definitionRequestDto);
+            string json = JsonConvert.SerializeObject(definitionRequestDto, Formatting.Indented);
 
             // Setup resources
             string uri = $"{ _optionsDto.SourceUri }/_apis/build/builds?api-version=5.0";
